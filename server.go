@@ -12,25 +12,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var socketHub *Hub
+
 func main() {
 	fmt.Println("hi", os.Getenv("PORT"))
 
 	db := connectDB()
 	defer db.Close()
 
-	initProduct(db)
+	initOrder(db)
+	initRestaurant(db)
 
-	hub := newHub()
-	go hub.run()
+	socketHub = newHub()
+	go socketHub.run()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+		serveWs(socketHub, w, r)
 	})
 
-	r.HandleFunc("/order", orderHandler).Methods("POST")
-	r.HandleFunc("/wstest", factorySendMessage(hub)).Methods("GET")
-	r.HandleFunc("/wsusers", factoryGetUsers(hub)).Methods("GET")
+	r.HandleFunc("/order", addOrderHr).Methods("POST")
+	r.HandleFunc("/orders/{orderid}/accept", acceptOrderHr).Methods("POST")
+	r.HandleFunc("/restaurant", registerRestaurantHr).Methods("POST")
+	r.HandleFunc("/wstest", factorySendMessage(socketHub)).Methods("GET")
+	r.HandleFunc("/wsusers", factoryGetUsers(socketHub)).Methods("GET")
 
 	srv := &http.Server{
 		Handler: r,
@@ -45,11 +50,11 @@ func main() {
 
 // serveWs handles websocket requests from the peer.
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	email := r.URL.Query().Get("email")
-	fmt.Println("user login, email:", email)
+	userName := r.URL.Query().Get("user")
+	fmt.Println("user login, username:", userName)
 	upgrader := websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
-			if email == "" {
+			if userName == "" {
 				return false
 			}
 			return true
@@ -60,7 +65,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), ID: email}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), ID: userName}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
