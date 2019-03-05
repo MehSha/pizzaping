@@ -3,25 +3,27 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_DB: test
+      POSTGRES_DB: pizza
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
-  svc1:
-    build: ../mock/svc1
-    ports:
-      - "8090:8090"
   app:
     build:
-      context: ../
-      dockerfile: .circleci/Dockerfile
+      context: .
     ports:
       - "8080:8080"
     environment:
       POSTGRES_HOST: db
-      POSTGRES_DB: test
+      POSTGRES_DB: pizza
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     depends_on:
       - db
+  ui:
+    build:
+      context: ./pushnotif
+    ports:
+      - "8090:8090"
+    depends_on:
+      - app
