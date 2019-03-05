@@ -31,10 +31,10 @@ func main() {
 	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(socketHub, w, r)
 	})
-	// r.Methods("OPTIONS").HandlerFunc(
-	// 	func(w http.ResponseWriter, r *http.Request){
-	// 	myHttpLib.OptionsForBrowserPreflight(w, r)
-	// })
+	r.Methods("OPTIONS").HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		})
 	r.HandleFunc("/order", addOrderHr).Methods("POST")
 	r.HandleFunc("/orders/{orderid}/accept", acceptOrderHr).Methods("POST")
 	r.HandleFunc("/restaurant", registerRestaurantHr).Methods("POST")
