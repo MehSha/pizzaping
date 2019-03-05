@@ -41,7 +41,7 @@ func main() {
 	r.HandleFunc("/wstest", factorySendMessage(socketHub)).Methods("GET")
 	r.HandleFunc("/wsusers", factoryGetUsers(socketHub)).Methods("GET")
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	srv := &http.Server{
