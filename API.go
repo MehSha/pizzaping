@@ -36,7 +36,7 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	restaurants, err := search(inp.PizzaName, inp.Lat, inp.Lon)
+	restaurants, err := searchRestaurant(inp.PizzaName, inp.Lat, inp.Lon)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Error: %s\n", err)
@@ -45,7 +45,7 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("resaurant are:", restaurants)
 	dishes := []*Dish{}
 	for _, rest := range restaurants {
-		d, err := getDish(rest.ID, inp.PizzaName, inp.Lat, inp.Lon)
+		d, err := getDish(rest.ID, inp.PizzaName)
 		if err == nil {
 			d.Restaurant = rest
 			dishes = append(dishes, d)

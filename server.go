@@ -15,6 +15,11 @@ import (
 func main() {
 	fmt.Println("hi", os.Getenv("PORT"))
 
+	db := connectDB()
+	defer db.Close()
+
+	initProduct(db)
+
 	hub := newHub()
 	go hub.run()
 

@@ -21,7 +21,7 @@ type searchResponse struct {
 	} `json:"data"`
 }
 
-func search(name string, lat, lon float32) ([]*Restaurant, error) {
+func search_old(name string, lat, lon float32) ([]*Restaurant, error) {
 	searchResp := searchResponse{}
 	result := []*Restaurant{}
 	//call backend
@@ -53,16 +53,16 @@ func search(name string, lat, lon float32) ([]*Restaurant, error) {
 	return result, nil
 }
 
-type Dish struct {
-	Name       string      `json:"name"`
-	ID         int         `json:"id"`
-	Restaurant *Restaurant `json:"restaurant"`
-	Variations []struct {
-		Name  string  `json:"name"`
-		ID    int     `json:"id"`
-		Price float32 `json:"price"`
-	} `json:"variations"`
-}
+// type Dish struct {
+// 	Name       string      `json:"name"`
+// 	ID         int         `json:"id"`
+// 	Restaurant *Restaurant `json:"restaurant"`
+// 	Variations []struct {
+// 		Name  string  `json:"name"`
+// 		ID    int     `json:"id"`
+// 		Price float32 `json:"price"`
+// 	} `json:"variations"`
+// }
 
 type product struct {
 	Name       string `json:"name"`
@@ -90,7 +90,7 @@ type dishResponse struct {
 	} `json:"data"`
 }
 
-func getDish(restaurantID int, name string, lat, lon float32) (*Dish, error) {
+func getDish_old(restaurantID int, name string, lat, lon float32) (*Dish, error) {
 	dish := &Dish{}
 	searchURL := fmt.Sprintf("https://de.fd-api.com/api/v5/vendors/%d?include=product_variations_normalized&latitude=%f&longitude=%f&opening_type=delivery",
 		restaurantID, lat, lon)
@@ -125,7 +125,7 @@ func getDish(restaurantID int, name string, lat, lon float32) (*Dish, error) {
 	for _, cat := range menu.Categories {
 		if strings.Contains(strings.ToLower(cat.Name), "pizza") {
 			// fmt.Printf("found pizza category %+v\n", cat)
-			//now search for actual product
+			// now search for actual product
 			for _, prd := range cat.Products {
 				fmt.Printf("checking product our search: %s, product name: %s, ok? %t\n", name, prd.Name, strings.Contains(strings.ToLower(prd.Name), name))
 				if strings.Contains(strings.ToLower(prd.Name), name) {
