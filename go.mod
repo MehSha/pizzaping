@@ -4,6 +4,7 @@ require (
 	github.com/MehSha/basicdam v0.4.1
 	github.com/SherClockHolmes/webpush-go v1.0.1
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.7.0
 	github.com/gorilla/websocket v1.4.0
 	github.com/jmoiron/sqlx v1.2.0

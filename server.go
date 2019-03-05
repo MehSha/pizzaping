@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/websocket"
 
 	"github.com/gorilla/mux"
@@ -30,7 +31,10 @@ func main() {
 	r.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(socketHub, w, r)
 	})
-
+	// r.Methods("OPTIONS").HandlerFunc(
+	// 	func(w http.ResponseWriter, r *http.Request){
+	// 	myHttpLib.OptionsForBrowserPreflight(w, r)
+	// })
 	r.HandleFunc("/order", addOrderHr).Methods("POST")
 	r.HandleFunc("/orders/{orderid}/accept", acceptOrderHr).Methods("POST")
 	r.HandleFunc("/restaurant", registerRestaurantHr).Methods("POST")
@@ -38,7 +42,7 @@ func main() {
 	r.HandleFunc("/wsusers", factoryGetUsers(socketHub)).Methods("GET")
 
 	srv := &http.Server{
-		Handler: r,
+		Handler: handlers.CORS()(r),
 		Addr:    ":8080",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
