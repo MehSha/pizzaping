@@ -12,8 +12,8 @@ FROM foodora/debian
 #copy 
 COPY --from=builder /build/app /usr/local/bin/app
 RUN chmod +x /usr/local/bin/app
-RUN mkdir /app
-ADD static /app
+RUN mkdir -p /app/static
+ADD static/ /app/static
 WORKDIR /app
 EXPOSE 8090
 CMD /usr/local/bin/app
