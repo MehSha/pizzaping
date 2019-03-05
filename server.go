@@ -41,8 +41,11 @@ func main() {
 	r.HandleFunc("/wstest", factorySendMessage(socketHub)).Methods("GET")
 	r.HandleFunc("/wsusers", factoryGetUsers(socketHub)).Methods("GET")
 
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	srv := &http.Server{
-		Handler: handlers.CORS()(r),
+		Handler: handlers.CORS(headersOk, originsOk, methodsOk)(r),
 		Addr:    ":8080",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
