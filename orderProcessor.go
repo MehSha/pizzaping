@@ -18,7 +18,9 @@ func acceptOrder(id string) error {
 	_, ok := socketHub.clientMap[order.UserID]
 	if !ok {
 		log.Printf("user %s does not have an active socket!\n", order.UserID)
+	} else {
+		socketHub.SendTo(order.UserID, []byte("order accepted"))
 	}
-	socketHub.SendTo(order.UserID, []byte("order accepted"))
+
 	return nil
 }
