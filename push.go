@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 )
@@ -21,15 +22,21 @@ func pushNotif(rest Restaurant, message string) {
 			Auth:   rest.Auth,
 		},
 	}
+	fmt.Println("sending notification to restaurant:", rest.ID)
 
 	// Send Notification
-	_, err := webpush.SendNotification([]byte(message), s, &webpush.Options{
-		Subscriber:      "example@example.com", // Do not include "mailto:"
+	rsp, err := webpush.SendNotification([]byte(message), s, &webpush.Options{
+		// Subscriber:      "example@example.com", // Do not include "mailto:"
 		VAPIDPublicKey:  vapidPublicKey,
 		VAPIDPrivateKey: vapidPrivateKey,
 		TTL:             30,
 	})
+
 	if err != nil {
 		fmt.Println("error sending notification:", err)
+	}
+	if rsp.StatusCode != 200 {
+		bd, err := ioutil.ReadAll(rsp.Body)
+		fmt.Println("error sending notification, wrong statuscode", string(bd), err)
 	}
 }

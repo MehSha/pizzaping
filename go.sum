@@ -1,5 +1,7 @@
 github.com/MehSha/basicdam v0.4.1 h1:EpJIUrZ54eIosRiO7h/4E2o7kT0sf65HyYabImCyzhU=
 github.com/MehSha/basicdam v0.4.1/go.mod h1:Hm0fV4l0INRbLUDKCGXGFY7IV8YA9qpuDxZJ/ESydcA=
+github.com/SherClockHolmes/webpush-go v1.0.0 h1:0ch0NWHjR/ZAzXnP8C+BASUjY1ZZlVX1buhPCExjn8I=
+github.com/SherClockHolmes/webpush-go v1.0.0/go.mod h1:Jbd13H6kOFZubRMAaEHQS+e0EpP/aSHtLKeo9gsyO5k=
 github.com/SherClockHolmes/webpush-go v1.0.1 h1:OoQfTikFyU4qL6mdABPB3/bfCQjwtUtRiQC1JRZbFH8=
 github.com/SherClockHolmes/webpush-go v1.0.1/go.mod h1:Jbd13H6kOFZubRMAaEHQS+e0EpP/aSHtLKeo9gsyO5k=
 github.com/caarlos0/env v3.5.0+incompatible h1:Yy0UN8o9Wtr/jGHZDpCBLpNrzcFLLM2yixi/rBrKyJs=

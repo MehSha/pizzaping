@@ -49,7 +49,7 @@ func addOrderHr(w http.ResponseWriter, r *http.Request) {
 		log.Println("coud not list restaurants", err)
 		return
 	}
-	fmt.Printf("restaurants are: %+v", rests)
+	fmt.Printf("restaurants are: %+v\n", rests)
 	for _, rst := range rests {
 		notif := OrderNotif{
 			OrderId: orderid,

@@ -1,6 +1,6 @@
 package main
 
-import "fmt"
+import "log"
 
 var ActiveOrders []*Order
 
@@ -17,7 +17,7 @@ func acceptOrder(id string) error {
 	//send message to user
 	_, ok := socketHub.clientMap[order.UserID]
 	if !ok {
-		return fmt.Errorf("user %s does not have an active socket!\n", order.UserID)
+		log.Printf("user %s does not have an active socket!\n", order.UserID)
 	}
 	socketHub.SendTo(order.UserID, []byte("order accepted"))
 	return nil
