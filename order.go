@@ -17,6 +17,7 @@ type Order struct {
 	Address   string  `json:"address"`
 	Lat       float32 `json:"lat"`
 	Lon       float32 `json:"lon"`
+	RestaurantName string `json:"restaurant_name"`
 }
 
 var orderDAM *basicdam.BasicDAM
@@ -40,7 +41,7 @@ func AddOrder(ord *Order) (string,error) {
 	return ord.ID, nil
 }
 
-func acceptOrderDB(id string) (*Order, error) {
+func acceptOrderDB(id, restName string) (*Order, error) {
 	ord:= &Order{}
 	err:=orderDAM.DB.Get(ord, "select * from orders where id=$1", id)
 	if err != nil{
@@ -51,6 +52,8 @@ func acceptOrderDB(id string) (*Order, error) {
 		return nil, fmt.Errorf("order already proccessed")
 	}
 	//update order
-	_,err=orderDAM.DB.Exec("update orders set status='ACCEPTED' where id=$1",  id)
+	_,err=orderDAM.DB.Exec("update orders set status='ACCEPTED', restaurantname=$2 where id=$1",  id, restName)
+	ord.RestaurantName = restName
+	ord.Status = "ACCEPTED"
 	return ord, err
 }

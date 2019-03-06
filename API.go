@@ -64,9 +64,24 @@ func addOrderHr(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "ok")
 }
 
+type AcceptReq struct {
+	RestaurantName string `json:"restaurant_name"`
+}
+
 func acceptOrderHr(w http.ResponseWriter, r *http.Request) {
+	inp := &AcceptReq{}
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	err = json.Unmarshal(body, inp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	id := mux.Vars(r)["orderid"]
-	err := acceptOrder(id)
+	err = acceptOrder(id, inp.RestaurantName)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("coud not update order", err)
@@ -106,6 +121,7 @@ func registerRestaurantHr(w http.ResponseWriter, r *http.Request) {
 	err = AddRestaurant(rst)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("error adding restaurant: %s\n\n", err)
 		return
 	}
 	// pushNotif(*rst, "you are added!")

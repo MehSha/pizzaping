@@ -1,6 +1,9 @@
 package main
 
-import "log"
+import (
+	"encoding/json"
+	"log"
+)
 
 var ActiveOrders []*Order
 
@@ -8,9 +11,9 @@ func init() {
 	ActiveOrders = make([]*Order, 0)
 }
 
-func acceptOrder(id string) error {
+func acceptOrder(id, restName string) error {
 	//update DB
-	order, err := acceptOrderDB(id)
+	order, err := acceptOrderDB(id, restName)
 	if err != nil {
 		return err
 	}
@@ -19,7 +22,8 @@ func acceptOrder(id string) error {
 	if !ok {
 		log.Printf("user %s does not have an active socket!\n", order.UserID)
 	} else {
-		socketHub.SendTo(order.UserID, []byte("order accepted"))
+		bt, _ := json.Marshal(order)
+		socketHub.SendTo(order.UserID, bt)
 	}
 
 	return nil
